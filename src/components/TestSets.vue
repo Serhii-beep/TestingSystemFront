@@ -1,0 +1,197 @@
+<template>
+    <div class="cardWrapper">
+        <div class="cardContainer inactive" 
+            v-for="testSet in testSetsCombined" 
+            :key="testSet.id" 
+            @click="testSetClick(testSet.id)"
+        >
+            <div class="card">
+                <div class="side front">
+                    <div class="info">
+                        <h2>{{ testSet.category }}</h2>
+                        <p class="level">Level: {{ testSet.level }}</p>
+                        <p class="description">{{ testSet.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import axios from 'axios'
+export default {
+    name: 'testsets',
+    props: {
+        testSets: {
+            type: Array,
+            required: true
+        }
+    },
+    data() {
+        return {
+            testSetsCombined: []
+        }
+    },
+    methods: {
+        testSetClick(id) {
+            this.$router.push({name: 'Tests', params: {testSetId: id}});
+        }
+    },
+    watch: {
+        async testSets(newValue) {
+            this.testSetsCombined = await Promise.all(newValue.map(async function(el) {
+                const newEl = new Object();
+                newEl.id = el.id;
+                newEl.description = el.description;
+                const cat = await axios.get(`https://localhost:44310/api/TestCategories/getById/${el.testCategoryId}`);
+                const lev = await axios.get(`https://localhost:44310/api/TestLevels/getById/${el.testLevelId}`);
+                newEl.category = cat.data.entity.name;
+                newEl.level = lev.data.entity.difficultyLevel;
+                return newEl;
+            }));
+        }
+    }
+}
+</script>
+<style scoped>
+@-webkit-keyframes Border {
+    0% { border-color: #258039 }
+    33% { border-color: #F5BE41; }
+    67% { border-color: #31A9B8; }
+    100% { border-radius: #CF3721; }
+}
+
+@keyframes Border {
+    0% { border-color: #258039 }
+    33% { border-color: #F5BE41; }
+    67% { border-color: #31A9B8; }
+    100% { border-radius: #CF3721; }
+}
+
+.cardWrapper {
+    position: relative;
+    display: flex;
+    left: 221px;
+    width: calc(100% - 240px);
+    min-height: 450px;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+h2, p {
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    font-family: "Oswald", sans-serif;
+    text-transform: uppercase;
+    color: #333333;
+    font-size: 37px;
+    font-weight: 500px;
+    letter-spacing: -0.2px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+p {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    color: #555;
+    line-height: 22px;
+}
+
+.cardContainer {
+    position: relative;
+    width: 240px;
+    height: 450px;
+    min-width: 300px;
+    min-height: 400px;
+    margin: 4px;
+    perspective: 1000px;
+}
+
+.card {
+    display: inline-block;
+    border: 4px solid;
+    width: 100%;
+    height: 100%;
+    -webkit-animation: Border 5s infinite alternate;
+    animation: Border 5s infinite alternate;
+    cursor: pointer;
+    overflow-y: scroll;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transform: translateZ(-100px);
+    transform: translateZ(-100px);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.card::-webkit-scrollbar {
+    display: none;
+}
+
+.card:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    box-shadow: 0 14px 50px -4px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1.4);
+}
+
+.card:hover {
+    -webkit-transform: translateZ(0px);
+    transform: translateZ(0px);
+}
+
+.card:hover:after {
+    opacity: 1;
+}
+
+.card .side {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background-color: rgb(250, 250, 250);
+}
+
+.card .front {
+    z-index: 2;
+}
+
+.front {
+    background-color: #dadce2;
+    background-position: center;
+    background-size: cover;
+    border-radius: 5px 5px 0 0;
+    width: 100%;
+    height: 350px;
+}
+
+.info {
+    text-align: center;
+}
+
+.level {
+    margin-bottom: 7px;
+    font-size: 20px;
+}
+
+.description {
+    font-size: 17px;
+    margin-left: 9px;
+    margin-right: 9px;
+    margin-top: 40px;
+}
+</style>
