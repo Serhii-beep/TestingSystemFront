@@ -44,11 +44,14 @@ export default {
     },
     methods: {
       logout() {
+        this.clearStorage();
+        this.userLogined = false;
+        this.$router.push({path: '/'});
+      },
+      clearStorage() {
         localStorage.removeItem('userToken');
         localStorage.removeItem('username');
         localStorage.removeItem('role');
-        this.userLogined = false;
-        this.$router.push({path: '/'});
       }
     },
     mounted() {

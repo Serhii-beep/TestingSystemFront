@@ -15,6 +15,11 @@
                 </div>
             </div>
         </div>
+        <div class="cardContainer inactive" @click="addTestSet">
+            <div class="card center">
+                <i class="fa-solid fa-plus vert"></i>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -35,6 +40,9 @@ export default {
     methods: {
         testSetClick(id) {
             this.$router.push({name: 'Tests', params: {testSetId: id}});
+        },
+        addTestSet() {
+            this.$router.push({path: '/addTestSet'});
         }
     },
     watch: {
@@ -66,6 +74,20 @@ export default {
     33% { border-color: #F5BE41; }
     67% { border-color: #31A9B8; }
     100% { border-radius: #CF3721; }
+}
+
+@-webkit-keyframes BorderAdd {
+    0% { border-color: #1b1db9 }
+    33% { border-color: #d326b6; }
+    67% { border-color: #bad619; }
+    100% { border-radius: #c20f62; }
+}
+
+@keyframes BorderAdd {
+    0% { border-color: #1b1db9 }
+    33% { border-color: #d326b6; }
+    67% { border-color: #bad619; }
+    100% { border-radius: #c20f62; }
 }
 
 .cardWrapper {
@@ -156,6 +178,10 @@ p {
     opacity: 1;
 }
 
+.card:hover:last-child::after {
+    opacity: 0;
+}
+
 .card .side {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -193,5 +219,20 @@ p {
     margin-left: 9px;
     margin-right: 9px;
     margin-top: 40px;
+}
+
+.center {
+    text-align: center;
+    font-size: 60px;
+    -webkit-animation: BorderAdd 5s infinite alternate;
+    animation: BorderAdd 5s infinite alternate;
+}
+
+.vert {
+    position: relative;
+    top: calc(50% - 45px);
+    border: 5px solid black;
+    border-radius: 15px;
+    padding: 7px;
 }
 </style>
