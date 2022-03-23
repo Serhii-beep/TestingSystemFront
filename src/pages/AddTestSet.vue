@@ -21,7 +21,7 @@
             <h4>Test set description</h4>
             <textarea v-model="description" rows="10"></textarea>
             <div class="btn-block">
-                <button @click="addTestSet">Add</button>
+                <button @click="addTestSet">Add<i class="fa-solid fa-plus add"></i></button>
             </div>
         </div>
     </div>
@@ -130,6 +130,8 @@ option {
 textarea {
     width: calc(100% - 6px);
     resize: none;
+    padding: 7px;
+    font-size: 16px;
 }
 
 .btn-block {
@@ -161,5 +163,9 @@ textarea:hover, select:hover {
 
 select:hover {
     cursor: pointer;
+}
+
+.add {
+    margin-left: 7px;
 }
 </style>
