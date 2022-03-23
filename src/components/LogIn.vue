@@ -79,9 +79,9 @@ export default {
         }
     },
     mounted() {
-        localStorage.removeItem('userToken');
-        localStorage.removeItem('username');
-        localStorage.removeItem('role');
+        if(localStorage.getItem('userToken') != null) {
+            this.$router.push({path: '/allTests'});
+        }
     }
 }
 </script>

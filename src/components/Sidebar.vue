@@ -1,5 +1,5 @@
 <template>
-    <aside v-if="userLogined" class="sidebar">
+    <aside v-show="userLogined" class="sidebar">
         <div id="leftside-navigation" class="nano">
             <ul class="nano-content">
                 <li>
@@ -9,7 +9,7 @@
                     <a href="#" class="a"><span>Categories</span></a>
                     <ul>
                         <li v-for="category in categories" :key="category.id">
-                            <router-link :to="{name: 'TestsByCategory', params: {id: category.id}}" class="a">{{ category.name }}</router-link>
+                          <router-link :to="{name: 'TestsByCategory', params: {id: category.id}}" class="a">{{ category.name }}</router-link>
                         </li>
                     </ul>
                 </li>
@@ -22,7 +22,7 @@
                     </ul>
                 </li>
             </ul>
-            <p class="user">
+              <p class="user">
               <label class="username">{{ this.username }}</label>
               <button class="logout" @click="logout">Logout</button>
             </p>
@@ -59,7 +59,7 @@ export default {
           this.userLogined = true;
           this.username = localStorage.getItem("username")
         }
-        $("#leftside-navigation .sub-menu > a").click(function (e) {
+        $("#leftside-navigation .sub-menu > a").on("click", function (e) {
             $("#leftside-navigation ul ul").slideUp(),
             $(this).next().is(":visible") || $(this).next().slideDown(),
             e.stopPropagation();
