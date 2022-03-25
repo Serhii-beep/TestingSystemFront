@@ -8,8 +8,9 @@
                 <li class="sub-menu">
                     <a href="#" class="a"><span>Categories</span></a>
                     <TransitionGroup tag="ul" name="fade">
-                        <li v-for="category in categories" :key="category.id">
+                        <li v-for="category in categories" :key="category.id" class="inputContainer">
                           <router-link :to="{name: 'TestsByCategory', params: {id: category.id}}" class="a">{{ category.name }}</router-link>
+                          <a @click="deleteCategory(category.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
                         </li>
                         <li class="inputContainer">
                           <input v-model="newCategory" type="text" class="sidebarInput" placeholder="Add category">
@@ -20,8 +21,9 @@
                 <li class="sub-menu">
                     <a href="#" class="a"><span>Levels</span></a>
                     <TransitionGroup tag="ul" name="fade">
-                        <li v-for="level in levels" :key="level.id">
+                        <li v-for="level in levels" :key="level.id" class="inputContainer">
                             <router-link :to="{name: 'TestsByLevel', params: {id: level.id}}" class="a">{{ level.difficultyLevel }}</router-link>
+                            <a @click="deleteLevel(level.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
                         </li> 
                           <li class="inputContainer">
                           <input v-model="newLevel" type="text" class="sidebarInput" placeholder="Add level">
@@ -90,6 +92,19 @@ export default {
           this.notify(err.response.data.errors[0]);
         });
       },
+      deleteCategory(id) {
+        this.showMsg = false;
+        axios.delete(`https://localhost:44310/api/TestCategories/delete/${id}`)
+          .then(() => {
+            this.fetchCategories();
+            this.color = "green";
+            this.notify("Category deleted successfully");
+          })
+          .catch(err => {
+            this.color = "red";
+            this.notify(err.response.data.errors[0]);
+        });
+      },
       addLevel() {
         this.showMsg = false;
         if(this.newLevel == '') {
@@ -108,6 +123,19 @@ export default {
           this.color = "red";
           this.notify(err.response.data.errors[0]);
         })
+      },
+      deleteLevel(id) {
+        this.showMsg = false;
+        axios.delete(`https://localhost:44310/api/TestLevels/delete/${id}`)
+          .then(() => {
+            this.fetchLevels();
+            this.color = "green";
+            this.notify("Level deleted successfully");
+          })
+          .catch(err => {
+            this.color = "red";
+            this.notify(err.response.data.errors[0]);
+        });
       },
       notify(msg) {
         this.message = msg;
@@ -308,7 +336,7 @@ body {
   background: transparent;
   outline: 0;
   border: none;
-  border-bottom: 1px solid #aeb2b7;
+  border-bottom: 2px solid #aeb2b7;
   transition: .3s ease-in;
 }
 
@@ -320,6 +348,24 @@ body {
   height: 25px;
   position: relative;
 }
+
+.fa-trash-can {
+  transition: .15s ease-in;
+}
+
+.fa-trash-can:hover {
+  cursor: pointer;
+  color: #1abc9c;
+}
+
+.delete {
+  height: 25px;
+  position: relative;
+  margin-left: auto;
+  margin-right: 45px;
+}
+
+
 
 .fa-plus {
   margin: 0;
