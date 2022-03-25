@@ -1,5 +1,5 @@
 <template>
-    <div v-show="show" class="alert red">
+    <div v-show="show" class="alert" :style="'background-color: ' + color">
         <div class="alert__header">
             <span class="alert__header">Notification</span>
             <span class="close" @click="close"><i class="fa-solid fa-xmark"></i></span>
@@ -13,6 +13,10 @@
 export default {
     props: {
         text: {
+            type: String,
+            required: true
+        },
+        color: {
             type: String,
             required: true
         }
@@ -46,10 +50,6 @@ export default {
     color: white;
     box-shadow: 0 0 5px #4c4c4c;
     border-radius: 5px;
-}
-
-.alert.red {
-    background-color: #f44336;
 }
 
 .alert__header {
