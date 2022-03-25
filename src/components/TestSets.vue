@@ -1,5 +1,5 @@
 <template>
-    <div class="cardWrapper">
+    <TransitionGroup tag="div" name="fade" class="cardWrapper">
         <div class="cardContainer inactive" 
             v-for="testSet in testSetsCombined" 
             :key="testSet.id" 
@@ -12,6 +12,12 @@
                         <p class="level">Level: {{ testSet.level }}</p>
                         <p class="description">{{ testSet.description }}</p>
                     </div>
+                    <div @click.stop class="toolsContainer">
+                        <ul class="tools">
+                            <li><i class="fa-solid fa-pen-to-square"></i></li>
+                            <li @click="deleteTestSet(testSet.id)"><i class="fa-solid fa-trash-can"></i></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -20,7 +26,7 @@
                 <i class="fa-solid fa-plus vert"></i>
             </div>
         </div>
-    </div>
+    </TransitionGroup>
 </template>
 <script>
 import axios from 'axios'
@@ -43,6 +49,13 @@ export default {
         },
         addTestSet() {
             this.$router.push({path: '/addTestSet'});
+        },
+        deleteTestSet(id) {
+            axios.delete(`https://localhost:44310/api/TestSets/delete/${id}`)
+                .then(() => {
+                    this.testSetsCombined = this.testSetsCombined.filter(test => test.id != id);
+                });
+                
         }
     },
     watch: {
@@ -143,7 +156,6 @@ p {
     -webkit-animation: Border 5s infinite alternate;
     animation: Border 5s infinite alternate;
     cursor: pointer;
-    overflow-y: scroll;
     overflow-wrap: break-word;
     -moz-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -154,7 +166,7 @@ p {
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.card::-webkit-scrollbar {
+.info::-webkit-scrollbar {
     display: none;
 }
 
@@ -208,6 +220,8 @@ p {
 
 .info {
     text-align: center;
+    overflow-y: scroll;
+    height: 88%;
 }
 
 .level {
@@ -236,5 +250,56 @@ p {
     border: 5px solid black;
     border-radius: 15px;
     padding: 7px;
+}
+
+.toolsContainer {
+    height: 8%;
+    margin: 13px 25px;
+    border: 2px solid #555;
+    border-radius: 13px;
+    transition: 0.5s ease;
+}
+
+.toolsContainer:hover {
+    transform: scale(1.1);
+}
+
+.tools {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    list-style: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.tools li {
+    margin: auto 9px;
+    color: #555;
+    font-size: 18px;
+    transition: .15s ease;
+}
+
+.tools li:hover {
+    color: #1abc9c;
+}
+
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. declare enter from and leave to state */
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.fade-leave-active {
+  position: absolute;
 }
 </style>
