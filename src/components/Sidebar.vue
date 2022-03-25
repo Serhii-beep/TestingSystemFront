@@ -7,19 +7,27 @@
                 </li>
                 <li class="sub-menu">
                     <a href="#" class="a"><span>Categories</span></a>
-                    <ul>
+                    <TransitionGroup tag="ul" name="fade">
                         <li v-for="category in categories" :key="category.id">
                           <router-link :to="{name: 'TestsByCategory', params: {id: category.id}}" class="a">{{ category.name }}</router-link>
                         </li>
-                    </ul>
+                        <li class="inputContainer">
+                          <input v-model="newCategory" type="text" class="sidebarInput" placeholder="Add category">
+                          <a href="#" class="a add" @click="addCategory"><i class="fa-solid fa-plus"></i></a>
+                        </li>
+                    </TransitionGroup>
                 </li>
                 <li class="sub-menu">
                     <a href="#" class="a"><span>Levels</span></a>
-                    <ul>
+                    <TransitionGroup tag="ul" name="fade">
                         <li v-for="level in levels" :key="level.id">
                             <router-link :to="{name: 'TestsByLevel', params: {id: level.id}}" class="a">{{ level.difficultyLevel }}</router-link>
+                        </li> 
+                          <li class="inputContainer">
+                          <input v-model="newLevel" type="text" class="sidebarInput" placeholder="Add level">
+                          <a href="#" class="a add" @click="addLevel"><i class="fa-solid fa-plus"></i></a>
                         </li>
-                    </ul>
+                    </TransitionGroup>
                 </li>
             </ul>
               <p class="user">
@@ -28,18 +36,28 @@
             </p>
         </div>
     </aside>
+    <notification style="z-index: 1000" v-if="showMsg" :text="message" :color="color"></notification>
 </template>
 <script>
 import $ from 'jquery';
 import axios from 'axios';
+import Notification from '@/components/Notification'
 export default {
+    components: {
+      Notification
+    },
     name: 'sidebar',
     data() {
         return {
             categories: [],
             levels: [],
             userLogined: false,
-            username: ''
+            username: '',
+            newCategory: '',
+            newLevel: '',
+            message: '',
+            showMsg: false,
+            color: ''
         }
     },
     methods: {
@@ -52,6 +70,59 @@ export default {
         localStorage.removeItem('userToken');
         localStorage.removeItem('username');
         localStorage.removeItem('role');
+      },
+      addCategory() {
+        this.showMsg = false;
+        if(this.newCategory == '') {
+          this.color = "red";
+          this.notify("Please enter the name of new category");
+          return;
+        }
+        axios.post('https://localhost:44310/api/TestCategories/post', {
+          name: this.newCategory
+        }).then(() => {
+          this.fetchCategories();
+          this.color = "green";
+          this.notify("New category added successfully");
+          this.newCategory = '';
+        }).catch(err => {
+          this.color = "red";
+          this.notify(err.response.data.errors[0]);
+        });
+      },
+      addLevel() {
+        this.showMsg = false;
+        if(this.newLevel == '') {
+          this.color = 'red';
+          this.notify("Please enter the name of new level");
+          return;
+        }
+        axios.post('https://localhost:44310/api/TestLevels/post', {
+          difficultyLevel: this.newLevel
+        }).then(() => {
+          this.fetchLevels();
+          this.color = "green";
+          this.notify("New level added successfully");
+          this.newLevel = '';
+        }).catch(err => {
+          this.color = "red";
+          this.notify(err.response.data.errors[0]);
+        })
+      },
+      notify(msg) {
+        this.message = msg;
+        this.showMsg = true;
+        setTimeout(() => this.showMsg = false, 5000);
+      },
+      fetchCategories() {
+        axios.get('https://localhost:44310/api/TestCategories/getAll').then(response => {
+          this.categories = response.data.entity;
+        });
+      },
+      fetchLevels() {
+        axios.get('https://localhost:44310/api/TestLevels/getAll').then(response => {
+          this.levels = response.data.entity;
+        });
       }
     },
     mounted() {
@@ -64,12 +135,8 @@ export default {
             $(this).next().is(":visible") || $(this).next().slideDown(),
             e.stopPropagation();
         });
-        axios.get('https://localhost:44310/api/TestCategories/getAll').then(response => {
-            this.categories = response.data.entity;
-        });
-        axios.get('https://localhost:44310/api/TestLevels/getAll').then(response => {
-            this.levels = response.data.entity;
-        });
+        this.fetchCategories();
+        this.fetchLevels();
     }
 }
 </script>
@@ -225,5 +292,64 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.inputContainer {
+  display: flex;
+}
+
+.sidebarInput {
+  height: 25px;
+  color: #aeb2b7;
+  font-size: 12px;
+  margin-left: 25px;
+  margin-bottom: 7px;
+  max-width: 130px;
+  background: transparent;
+  outline: 0;
+  border: none;
+  border-bottom: 1px solid #aeb2b7;
+  transition: .3s ease-in;
+}
+
+.sidebarInput:focus {
+  border-bottom-color: #1abc9c;
+}
+
+.add {
+  height: 25px;
+  position: relative;
+}
+
+.fa-plus {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  font-size: 20px;
+  transition: .15s ease-in;
+}
+
+.fa-plus:hover {
+  color: #1abc9c;
+}
+
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. declare enter from and leave to state */
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.fade-leave-active {
+  position: absolute;
 }
 </style>

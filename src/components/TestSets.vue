@@ -144,6 +144,7 @@ p {
     animation: Border 5s infinite alternate;
     cursor: pointer;
     overflow-y: scroll;
+    overflow-wrap: break-word;
     -moz-backface-visibility: hidden;
     backface-visibility: hidden;
     -webkit-transform-style: preserve-3d;
@@ -224,6 +225,7 @@ p {
 .center {
     text-align: center;
     font-size: 60px;
+    overflow-x: hidden;
     -webkit-animation: BorderAdd 5s infinite alternate;
     animation: BorderAdd 5s infinite alternate;
 }

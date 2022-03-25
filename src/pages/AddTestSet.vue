@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-    <notification v-if="showMsg" :text="message"></notification>
+    <notification v-if="showMsg" :text="message" :color="color"></notification>
 </template>
 <script>
 import axios from 'axios'
@@ -42,7 +42,8 @@ export default {
             selectedLevel: 0,
             description: '',
             message: '',
-            showMsg: false
+            showMsg: false,
+            color: 'red'
         }
     },
     methods: {
@@ -64,6 +65,7 @@ export default {
                 this.$router.push({path: '/allTests'});
             })
             .catch(err => {
+                this.color = "red";
                 this.notify(err.response.data.errors[0]);
             });
         },
