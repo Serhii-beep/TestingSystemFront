@@ -4,6 +4,7 @@ import TestsByLevel from '@/components/TestsByLevel'
 import Test from '@/components/Test'
 import LogIn from '@/components/LogIn'
 import AddTestSet from '@/pages/AddTestSet'
+import UpdateTestSet from '@/pages/UpdateTestSet'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
@@ -34,6 +35,11 @@ const routes = [
         path: '/addTestSet',
         name: 'AddTestSet',
         component: AddTestSet
+    },
+    {
+        path: '/updateTestSet/:testSetId',
+        name: 'UpdateTestSet',
+        component: UpdateTestSet
     }
 ]
 

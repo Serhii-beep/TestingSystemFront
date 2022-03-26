@@ -14,7 +14,7 @@
                     </div>
                     <div @click.stop class="toolsContainer">
                         <ul class="tools">
-                            <li><i class="fa-solid fa-pen-to-square"></i></li>
+                            <li @click="updateTestSet(testSet.id)"><i class="fa-solid fa-pen-to-square"></i></li>
                             <li @click="deleteTestSet(testSet.id)"><i class="fa-solid fa-trash-can"></i></li>
                         </ul>
                     </div>
@@ -49,6 +49,9 @@ export default {
         },
         addTestSet() {
             this.$router.push({path: '/addTestSet'});
+        },
+        updateTestSet(id) {
+            this.$router.push({name: 'UpdateTestSet', params: { testSetId: id }});
         },
         deleteTestSet(id) {
             axios.delete(`https://localhost:44310/api/TestSets/delete/${id}`)
