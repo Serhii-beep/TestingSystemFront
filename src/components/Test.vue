@@ -33,6 +33,7 @@
                         </div>
                         <footer class="questionFooter">
                             <nav class="pagination" role="navigation" aria-label="navigation">
+                                <a v-show="role=='admin'" class="button is-active" @click="manageTests"><i class="fa-solid fa-pen-to-square"></i></a>
                                 <a class="button is-active" @click="next" :disabled="current >= tests.length">
                                     {{ (current == tests.length - 1) ? 'Finish' : 'Next' }}
                                 </a>
@@ -77,7 +78,8 @@ export default {
             score: 0,
             maxScore: 0,
             isClicked: false,
-            isLoading: true
+            isLoading: true,
+            role: ''
         }
     },
     methods: {
@@ -96,7 +98,6 @@ export default {
             }
             this.isClicked = true;
             const isCorrect = await axios.get(`https://localhost:44310/api/Tests/checkAnswer/${this.tests[this.current].id}&${answerId}`);
-            console.log(isCorrect.data.entity);
             if(isCorrect.data.entity === true) {
                 this.score += this.tests[this.current].question.points;
                 e.target.style.backgroundColor = "green";
@@ -104,6 +105,9 @@ export default {
             else {
                 e.target.style.backgroundColor = "red";
             }
+        },
+        manageTests() {
+            this.$router.push({name: 'ManageTests', params: {testSetId: this.$route.params.testSetId}});
         }
     },
     mounted() {
@@ -115,6 +119,7 @@ export default {
             }
             this.isLoading = false;
         });
+        this.role = localStorage.getItem('role');
     }
 }
 </script>
@@ -325,7 +330,7 @@ export default {
     padding: 0.5rem 1rem;
     border: 1px solid rgba(0, 0, 0, 0.25);
     border-radius: 5rem;
-    margin: 0, 0.25rem;
+    margin: 0 10px;
     transition: 0.3s;
 }
 

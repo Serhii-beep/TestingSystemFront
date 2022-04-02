@@ -61,6 +61,10 @@ export default {
                 testCategoryId: this.selectedCategory,
                 testLevelId: this.selectedLevel,
                 description: this.description
+            }, {
+                headers: {
+              'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+            }
             }).then(() => {
                 this.$router.push({path: '/allTests'});
             })

@@ -12,16 +12,16 @@
                         <p class="level">Level: {{ testSet.level }}</p>
                         <p class="description">{{ testSet.description }}</p>
                     </div>
-                    <div @click.stop class="toolsContainer">
+                    <div v-show="role=='admin'" @click.stop class="toolsContainer">
                         <ul class="tools">
-                            <li @click="updateTestSet(testSet.id)"><i class="fa-solid fa-pen-to-square"></i></li>
+                            <li @click="updateTestSet(testSet.id)"><i class="fa-solid fa-pen-to-square"></i></li> | 
                             <li @click="deleteTestSet(testSet.id)"><i class="fa-solid fa-trash-can"></i></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="cardContainer inactive" @click="addTestSet">
+        <div class="cardContainer inactive" @click="addTestSet" :key="'addTestSet'">
             <div class="card center">
                 <i class="fa-solid fa-plus vert"></i>
             </div>
@@ -40,7 +40,8 @@ export default {
     },
     data() {
         return {
-            testSetsCombined: []
+            testSetsCombined: [],
+            role: ''
         }
     },
     methods: {
@@ -54,12 +55,19 @@ export default {
             this.$router.push({name: 'UpdateTestSet', params: { testSetId: id }});
         },
         deleteTestSet(id) {
-            axios.delete(`https://localhost:44310/api/TestSets/delete/${id}`)
+            axios.delete(`https://localhost:44310/api/TestSets/delete/${id}`, {
+                headers: {
+              'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+            }
+            })
                 .then(() => {
                     this.testSetsCombined = this.testSetsCombined.filter(test => test.id != id);
                 });
                 
         }
+    },
+    mounted() {
+        this.role = localStorage.getItem('role');
     },
     watch: {
         async testSets(newValue) {

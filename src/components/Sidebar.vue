@@ -10,9 +10,9 @@
                     <TransitionGroup tag="ul" name="fade">
                         <li v-for="category in categories" :key="category.id" class="inputContainer">
                           <router-link :to="{name: 'TestsByCategory', params: {id: category.id}}" class="a">{{ category.name }}</router-link>
-                          <a @click="deleteCategory(category.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
+                          <a v-show="role=='admin'" @click="deleteCategory(category.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
                         </li>
-                        <li class="inputContainer">
+                        <li v-show="role=='admin'" class="inputContainer" :key="'inputContainerCategory'">
                           <input v-model="newCategory" type="text" class="sidebarInput" placeholder="Add category">
                           <a href="#" class="a add" @click="addCategory"><i class="fa-solid fa-plus"></i></a>
                         </li>
@@ -23,9 +23,9 @@
                     <TransitionGroup tag="ul" name="fade">
                         <li v-for="level in levels" :key="level.id" class="inputContainer">
                             <router-link :to="{name: 'TestsByLevel', params: {id: level.id}}" class="a">{{ level.difficultyLevel }}</router-link>
-                            <a @click="deleteLevel(level.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
+                            <a v-show="role=='admin'" @click="deleteLevel(level.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
                         </li> 
-                          <li class="inputContainer">
+                          <li v-show="role=='admin'" class="inputContainer" :key="'inputContainerLevels'">
                           <input v-model="newLevel" type="text" class="sidebarInput" placeholder="Add level">
                           <a href="#" class="a add" @click="addLevel"><i class="fa-solid fa-plus"></i></a>
                         </li>
@@ -59,7 +59,8 @@ export default {
             newLevel: '',
             message: '',
             showMsg: false,
-            color: ''
+            color: '',
+            role: ''
         }
     },
     methods: {
@@ -82,6 +83,11 @@ export default {
         }
         axios.post('https://localhost:44310/api/TestCategories/post', {
           name: this.newCategory
+          }, 
+          {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+            }
         }).then(() => {
           this.fetchCategories();
           this.color = "green";
@@ -94,7 +100,11 @@ export default {
       },
       deleteCategory(id) {
         this.showMsg = false;
-        axios.delete(`https://localhost:44310/api/TestCategories/delete/${id}`)
+        axios.delete(`https://localhost:44310/api/TestCategories/delete/${id}`, {
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+            }
+        })
           .then(() => {
             this.fetchCategories();
             this.color = "green";
@@ -114,6 +124,10 @@ export default {
         }
         axios.post('https://localhost:44310/api/TestLevels/post', {
           difficultyLevel: this.newLevel
+        }, {
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+            }
         }).then(() => {
           this.fetchLevels();
           this.color = "green";
@@ -126,7 +140,11 @@ export default {
       },
       deleteLevel(id) {
         this.showMsg = false;
-        axios.delete(`https://localhost:44310/api/TestLevels/delete/${id}`)
+        axios.delete(`https://localhost:44310/api/TestLevels/delete/${id}`, {
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('userToken')}`
+            }
+        })
           .then(() => {
             this.fetchLevels();
             this.color = "green";
@@ -156,7 +174,8 @@ export default {
     mounted() {
         if(localStorage.getItem('username') != null) {
           this.userLogined = true;
-          this.username = localStorage.getItem("username")
+          this.username = localStorage.getItem("username");
+          this.role = localStorage.getItem("role");
         }
         $("#leftside-navigation .sub-menu > a").on("click", function (e) {
             $("#leftside-navigation ul ul").slideUp(),
