@@ -57,6 +57,7 @@
                         </p>
                         <br>
                         <a class="button" @click="restart">restart <i class="fa fa-refresh"></i></a>
+                        <a v-show="role=='admin'" class="button is-active" @click="manageTests"><i class="fa-solid fa-pen-to-square"></i></a>
                     </div>
                 </transition>
             </div>

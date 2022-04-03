@@ -100,6 +100,7 @@ export default {
             this.tests = this.tests.filter(t => t.id != testId);
         },
         maxTestId(array) {
+            if(array.length == 0) return 1;
             let max = array[0].id;
             for(let i = 1; i < array.length; ++i) {
                 if(array[i].id > max) {
@@ -109,6 +110,8 @@ export default {
             return max;
         },
         maxAnswerId(array) {
+            if(array.length == 0) return 1;
+            if(array[0].answers.length == 0) return 1;
             let max = array[0].answers[0];
             for(let i = 0; i < array.length; ++i) {
                 for(let j = 0; j < array[i].answers.length; ++j) {
@@ -120,6 +123,7 @@ export default {
             return max;
         },
         maxQuestionId(array) {
+            if(array.length == 0) return 1;
             let max = array[0].question.id;
             for(let i = 1; i < array.length; ++i) {
                 if(array[i].question.id > max) {
@@ -172,6 +176,7 @@ export default {
 }
 
 .testsContainer {
+    width: 620px;
     background: #f0f0f0;
     border-radius: 0.5rem;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
