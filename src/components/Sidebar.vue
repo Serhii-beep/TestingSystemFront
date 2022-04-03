@@ -9,7 +9,7 @@
                     <a href="#" class="a"><span>Categories</span></a>
                     <TransitionGroup tag="ul" name="fade">
                         <li v-for="category in categories" :key="category.id" class="inputContainer">
-                          <router-link :to="{name: 'TestsByCategory', params: {id: category.id}}" class="a">{{ category.name }}</router-link>
+                          <router-link :to="{name: 'TestsByCategory', params: {id: category.id}}" class="a aa">{{ category.name }}</router-link>
                           <a v-show="role=='admin'" @click="deleteCategory(category.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
                         </li>
                         <li v-show="role=='admin'" class="inputContainer" :key="'inputContainerCategory'">
@@ -270,6 +270,10 @@ body {
   -o-transition: all 200ms ease-in;
   -ms-transition: all 200ms ease-in;
   transition: all 200ms ease-in;
+}
+
+.aa {
+  overflow: hidden;
 }
 
 .a:hover {

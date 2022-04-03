@@ -1,4 +1,7 @@
 <template>
+    <video id="smokeScreen" autoplay loop muted>
+        <source src="../videos/space.mp4" type="video/mp4">
+    </video>
     <div class="login">
         <h2 @click="register=!register"
             :class="{'active': !register, 'nonactive': register}"
@@ -15,7 +18,6 @@
             <span>password</span>
             <br>
             <button class="signin" @click="login">Sign In</button>
-            <hr>
         </div>
         <div class="form" v-else>
             <input type="text" class="text" name="username" v-model="username" autocomplete="off">
@@ -30,7 +32,6 @@
             <span>confirm password</span>
             <br>
             <button class="signin" @click="signup">Register</button>
-            <hr>
         </div>
         <p class="error">{{ error }}</p>
     </div>
@@ -82,6 +83,7 @@ export default {
         if(localStorage.getItem('userToken') != null) {
             this.$router.push({path: '/allTests'});
         }
+        document.querySelector('video').playbackRate = 0.8;
     }
 }
 </script>
@@ -99,12 +101,10 @@ export default {
     width: 505px;
     margin: auto;
     top: 50px;
-    left: 120px;
     padding: 60px 60px;
     border-radius: 30px;
-    background: url('../images/login.jpg') no-repeat center center #505050;
+    background: transparent;
     background-size: cover;
-    box-shadow: 0px 30px 60px -5px #000;
 }
 
 .form {
@@ -153,6 +153,18 @@ span {
     transition: all 0.5s ease-in-out;
 }
 
+#smokeScreen {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
 .text {
     border: none;
     padding: 10px 20px;
@@ -180,7 +192,7 @@ span {
 
 input[type="text"],
 input[type="password"] {
-    color: #fff;
+    color: #1161ed;
 }
 
 input {

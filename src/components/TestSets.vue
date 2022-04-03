@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <div class="cardContainer inactive" @click="addTestSet" :key="'addTestSet'">
+        <div v-show="role=='admin'" class="cardContainer inactive" @click="addTestSet" :key="'addTestSet'">
             <div class="card center">
                 <i class="fa-solid fa-plus vert"></i>
             </div>
