@@ -22,7 +22,7 @@
                     <a href="#" class="a"><span>Levels</span></a>
                     <TransitionGroup tag="ul" name="fade">
                         <li v-for="level in levels" :key="level.id" class="inputContainer">
-                            <router-link :to="{name: 'TestsByLevel', params: {id: level.id}}" class="a">{{ level.difficultyLevel }}</router-link>
+                            <router-link :to="{name: 'TestsByLevel', params: {id: level.id}}" class="a aa">{{ level.difficultyLevel }}</router-link>
                             <a v-show="role=='admin'" @click="deleteLevel(level.id)" class="a delete"><i class="fa-solid fa-trash-can"></i></a>
                         </li> 
                           <li v-show="role=='admin'" class="inputContainer" :key="'inputContainerLevels'">
